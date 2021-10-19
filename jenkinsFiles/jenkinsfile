@@ -1,1 +1,31 @@
+pipeline {
+    agent any
 
+    stages {
+        stage('Delete workspace before build starts') {
+            steps {
+                echo 'Deleting workspace'
+                deleteDir()
+            }
+        }
+        stage('getway_check') {
+            steps{
+                git branch: 'main',
+                    url: 'https://github.com/StepleR1337/docker.git'        
+                }
+        }
+        stage("building") {
+            steps {
+                echo "starting build"
+                dir ('dockerFiles') {
+                    sh 'docker build . -t mit_r '
+                  }  
+             }
+        }        
+        stage("run") {
+             steps {
+                    sh 'docker run mit_r'
+                }
+             }
+          }
+      }
